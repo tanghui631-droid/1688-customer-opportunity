@@ -10,12 +10,12 @@ python cli.py boss_daily_patrol --skip-advice
 
 | 参数 | 默认 | 说明 |
 |------|------|------|
-| `--top` | 10 | 重点客户上限。低机会不会为了凑数进入名单 |
-| `--date-type` | RECENT_30 | 补充筛选的时间范围 |
-| `--max-clusters` | 20 | 最多展开多少个 AI 客群 |
+| `--top` | 10 | 重点客户上限，低机会不凑数 |
+| `--date-type` | RECENT_30 | 补充筛选时间范围 |
+| `--max-clusters` | 20 | 最多展开的 AI 客群数 |
 | `--skip-advice` | 关 | 跳过画像建议 |
 | `--state-dir` | ~/.openclaw/1688-customer-opportunity/patrol | 上一期快照目录 |
 
 输出仍是 `success / markdown / data`。`markdown` 是给老板看的日报，不含接口名和内部字段名。
 
-查询失败的来源会记入日报，不使用空结果编造客户。AK 未配置时与其他命令一样提示先配置。
+查询失败的来源记入日报，不使用空结果编造客户。AK 未配置时与其他命令一样提示先配置。
