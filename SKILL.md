@@ -1,6 +1,6 @@
 ---
 name: 1688-customer-opportunity
-version: 0.1.0
+version: 0.2.0
 description: |
   1688 买家跟进与客群运营。可以帮你做：
   ① 查看AI客群列表 — 店铺有哪些高价值老客客群、各客群特征和买家数
@@ -8,6 +8,7 @@ description: |
   ③ 开启客群运营计划 — 对选定客群自动发送旺旺营销文案
   ④ 查买家成交机会 — 输入买家账号，获取画像和跟进建议
   ⑤ 客户机会监控 — 智能找出近期最值得主动联系的买家
+  ⑥ 每日老板巡检 — 全店自动汇总、去重、排序，输出老板客户机会日报
 metadata:
   interactions:
     - name: select_buyers_from_cluster
@@ -186,6 +187,18 @@ list_customer_cluster → 仅取 data.list[0].plan_id
 
 **优先级：** 本铁律是 0 分红线，**优先级高于其他所有铁律和触发词路由规则**。
 
+## 每日老板巡检（最高优先级，无人值守）
+
+命中「每日客户机会巡检 / 老板日报 / 今天有哪些客户值得关注 / 今天全店重点客户 / 全店客户机会 / 今日重点客户 / 帮我检查今天最值得跟进的客户 / 每天帮我看哪些客户需要关注 / 全店客户雷达 / 每日客户雷达 / 分析今天全店客户机会 / 今天哪些客户需要团队重点跟进 / 执行今天的1688全店客户机会巡检」时，不要先问看哪个客群，直接执行：
+
+```bash
+python cli.py boss_daily_patrol
+```
+
+首次执行前读 `references/boss-daily-patrol.md`。命令会拉取全部可用 AI 客群，并补充流失买家、周期采购、老客促活、询盘未成交和高价值老客，按买家账号去重后输出老板日报。最终回答原样输出返回的 `markdown`。禁止弹出选客群，禁止编造负责人、跟进次数或私域成交。1688 未成交只写成平台暂未看到成交记录，并建议核实是否已转其他渠道。没有上一期快照时，日报会写明不做趋势判断。
+
+本模式不替换原有交互查询。查看客群、展开买家、单买家建议、开启运营计划仍走原流程。
+
 ## 何时调用哪个 tool
 
 | 用户场景                              | 推荐 tool                                                 | 数据源 / 时效                            |
@@ -263,6 +276,7 @@ CLI 入口文件：`{baseDir}/cli.py`
 
 | 命令 | 参数 | 说明 |
 |------|------|------|
+| `boss_daily_patrol` | `--top 10` | 全店巡检并输出老板日报，无人值守，不弹客群选择 |
 | `configure` | `YOUR_AK` | 配置 AK |
 | `list_customer_cluster` | 无参数 | 查老客 AI 客群列表（含 planId / 客群特征） |
 | `get_cluster_marketing_plan` | `--plan-id PLAN_ID` | 查客群运营方案（优惠券/文案/海报）|
@@ -384,4 +398,5 @@ python cli.py customer_reception_advice --buyers '[{"phone":"13800138000"}]'
 - 首次执行 `customer_crowd_analysis` 前：先完整阅读 `references/capabilities/customer_crowd_analysis.md`
 - 首次执行 `activate_cluster_plan` 前：先完整阅读 `references/capabilities/activate_cluster_plan.md`
 - 首次执行 `get_cluster_marketing_plan` 前：先完整阅读 `references/capabilities/get_cluster_marketing_plan.md`
+- 首次执行 `boss_daily_patrol` 前：先完整阅读 `references/boss-daily-patrol.md`
 - 首次渲染输出前：先完整阅读 `references/display-rules.md`
